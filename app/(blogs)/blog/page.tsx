@@ -1,31 +1,15 @@
+import { allAuthors, allCategories, allPosts } from "contentlayer/generated"
+import { compareDesc } from "date-fns"
 import Image from "next/image"
 import Link from "next/link"
-import { compareDesc } from "date-fns"
-import { allPosts, allCategories, allAuthors } from "contentlayer/generated"
 
-import { formatDate } from "@/lib/utils"
-import { client, urlFor } from "@/lib/sanity"
-import { BlogCard } from "@/lib/interface"
 import { DocsSidebarNav } from "@/components/sidebar-nav"
-import { docsConfig } from "@/config/blog"
+import { client } from "@/lib/sanity"
+import { formatDate } from "@/lib/utils"
 import { SidebarNavItem } from "@/types"
 
 export const metadata = {
   title: "Blog",
-}
-
-async function getPosts() {
-  const query = `
-    *[_type == 'post'] | order(_createdAt desc) {
-        title,
-            description,
-            "currentSlug": slug.current,
-            mainImage,
-            publishedAt
-
-    }`
-  const data = await client.fetch(query);
-  return data;
 }
 
 function getSidebarNavItems(): SidebarNavItem[] {
@@ -54,8 +38,6 @@ export default async function BlogPage() {
   })
 
   const sidebarItems = getSidebarNavItems()
-
-  console.log(sidebarItems)
 
   return (
 

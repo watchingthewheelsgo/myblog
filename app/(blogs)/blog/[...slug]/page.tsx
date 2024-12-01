@@ -145,6 +145,14 @@ async function getComments(post: Post): Promise<any[]> {
   return comments
 }
 
+function getNextPost(post: Post) {
+  const nextPost = allPosts.sort((a, b) => {
+    return compareDesc(new Date(a.date), new Date(b.date))
+  }).filter((p) => p.date < post.date).find((p) => p.slugAsParams != post.slugAsParams)
+
+  return nextPost
+}
+
 export default async function PostPage(props: {
   params: Params
   searchParams: SearchParams
@@ -155,6 +163,8 @@ export default async function PostPage(props: {
     notFound()
   }
 
+  const nextPost = getNextPost(post)
+
   const authors = post.authors.map((author) =>
     allAuthors.find(({ slug }) => slug === `/authors/${author}`)
   )
@@ -162,11 +172,7 @@ export default async function PostPage(props: {
 
   const user = await getCurrentUser()
 
-  console.log(user)
-
   const comments = await getComments(post)
-
-  console.log(comments)
 
   const orderedComments = comments.sort((a, b) => {
     return compareDesc(new Date(a.createdAt), new Date(b.createdAt))
@@ -241,10 +247,19 @@ export default async function PostPage(props: {
             <Icons.chevronLeft className="mr-2 size-4" />
             See all posts
           </Link>
-          <Link href={`/blog/${post.slugAsParams}`} className={cn(buttonVariants({ variant: "ghost" }))}>
-            <Icons.chevronRight className="mr-2 size-4" />
-            Next post - <span className="font-bold">{post.title.slice(0, 20)}...</span>
-          </Link>
+          {
+            nextPost ? (
+              <Link href={`/blog/${nextPost.slugAsParams}`} className={cn(buttonVariants({ variant: "ghost" }))}>
+                <Icons.chevronRight className="mr-2 size-4" />
+                Next post - <span className="font-bold">{ nextPost.title.slice(0, 20)}...</span>
+              </Link>
+            ) : (
+              <div className={cn(buttonVariants({ variant: "ghost" }))}>
+                <Icons.chevronRight className="mr-2 size-4" />
+                Next post - <span className="font-bold">More to find...</span>
+              </div>
+            )
+          }
         </div>
         <hr className="mb-2" />
         <div aria-label="user comments" className="mx-auto w-full max-w-2xl space-y-6 py-8">
@@ -252,7 +267,7 @@ export default async function PostPage(props: {
             <h2 className="text-2xl font-bold">Comments</h2>
             <p className="text-gray-500 dark:text-gray-400">Share your thoughts and feedback.</p>
           </div>
-          <TextareaForm user={user} post={post} comments={orderedComments}/>
+          <TextareaForm user={user} post={post} comments={orderedComments} />
         </div>
 
       </div>

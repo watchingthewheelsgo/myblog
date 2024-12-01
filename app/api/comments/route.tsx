@@ -13,7 +13,6 @@ const commentCreateSchema = z.object({
 
 export async function GET(req: Request) {
   try {
-    console.log(req)
     const url = new URL(req.url)
     const values = commentFetchByPostSchema.parse(Object.fromEntries(url.searchParams))
 

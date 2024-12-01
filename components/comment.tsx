@@ -4,7 +4,7 @@ import { zodResolver } from "@hookform/resolvers/zod"
 import { useForm } from "react-hook-form"
 import { z } from "zod"
 
-import { toast } from "@/hooks/use-toast"
+import { Post } from "@/.contentlayer/generated"
 import { Button } from "@/components/ui/button"
 import {
   Form,
@@ -16,12 +16,11 @@ import {
   FormMessage,
 } from "@/components/ui/form"
 import { Textarea } from "@/components/ui/textarea"
-import { User } from "next-auth"
-import { Post } from "@/.contentlayer/generated"
-import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
+import { toast } from "@/hooks/use-toast"
 import { formatDate } from "@/lib/utils"
-import { useMounted } from "@/hooks/use-mounted"
-import { useMemo } from "react"
+import { User } from "next-auth"
+import { Avatar, AvatarFallback, AvatarImage } from "./ui/avatar"
+import { useRouter } from "next/navigation"
 
 const FormSchema = z.object({
   comment: z
@@ -40,6 +39,8 @@ export function TextareaForm({ user, post, comments }: { user: User | undefined,
   const form = useForm<z.infer<typeof FormSchema>>({
     resolver: zodResolver(FormSchema),
   })
+
+  const router = useRouter()
 
   async function onSubmit(data: z.infer<typeof FormSchema>) {
     if (!user) {
@@ -76,7 +77,7 @@ export function TextareaForm({ user, post, comments }: { user: User | undefined,
       }
 
       form.reset({ comment: "" })
-
+      router.refresh()
       return toast({
         description: "Your comment has been added. Thank you!",
       })

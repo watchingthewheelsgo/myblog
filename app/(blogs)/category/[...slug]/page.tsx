@@ -72,8 +72,6 @@ export default async function PostPage(props: {
 
     const sidebarItems = getSidebarNavItems()
 
-    console.log(sidebarItems)
-
     return (
         <div className="container max-w-5xl py-4 lg:py-8">
             <div className="flex-1 md:grid md:grid-cols-[180px_1fr] md:gap-10 lg:grid-cols-[200px_1fr] lg:gap-12">
