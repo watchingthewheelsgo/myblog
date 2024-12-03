@@ -5,6 +5,7 @@ POSTGRES_USER="workingman"
 POSTGRES_PASSWORD="workingman" # Generate a random 12-character password
 POSTGRES_DB="workingman"
 SECRET_KEY="my-secret" # for the demo app
+NEXT_PUBLIC_SAFE_KEY="safe-key" # for the demo app
 DOMAIN_NAME="workingmanspace.com" # replace with your own
 EMAIL="lizero.why@gmail.com" # replace with your own
 

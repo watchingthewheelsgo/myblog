@@ -4,34 +4,6 @@ import { allCategories, allPosts } from "contentlayer/generated"
 import { compareDesc } from "date-fns/compareDesc"
 import Image from "next/image"
 import Link from "next/link"
-import { env } from "process"
-
-async function getGitHubStars(url: string): Promise<string | null> {
-  try {
-    const response = await fetch(
-      url,
-      {
-        headers: {
-          Accept: "application/vnd.github+json",
-          Authorization: `Bearer ${env.GITHUB_ACCESS_TOKEN}`,
-        },
-        next: {
-          revalidate: 60,
-        },
-      }
-    )
-
-    if (!response?.ok) {
-      return null
-    }
-
-    const json = await response.json()
-
-    return parseInt(json["stargazers_count"]).toLocaleString()
-  } catch (error) {
-    return null
-  }
-}
 
 
 export default async function IndexPage() {
